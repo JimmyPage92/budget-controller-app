@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 # Create your models here.
 CHOICES_INCOME = (
-    ('blank', 'Blank'),
-    ('social', 'Social'),
-    ('salary', 'Salary'),
-    ('donation', 'Donation')
+    ('Blank', 'Blank'),
+    ('Social', 'Social'),
+    ('Salary', 'Salary'),
+    ('Donation', 'Donation')
 )
 
 CHOICES_CURRENCY = (
