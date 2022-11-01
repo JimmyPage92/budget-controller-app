@@ -1,0 +1,21 @@
+{% extends 'budget/base.html' %}
+{% block content %}
+<div class="content-section">
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+        <div class="media-body">
+            <h2 class="account-heading">Hi, {{ user.username }}</h2>
+        </div>
+    </div>
+    <h3> It's Your history budget</h3>
+<hr style="height: 3px; background: blue; border: 0px;">
+<h2>Twoje przychody:</h2>
+{% for x in incomes %}
+<h6>{{ x.reason_income }} - amounts to {{ x.income }} {{ x.currency}} from {{ x.date_income|date:"d.m.Y" }}</h6>
+    {% endfor %}
+<hr style="height: 3px; background: red; border: 0px;">
+<h2>Twoje wydatki:</h2>
+{% for a in expanses %}
+<h6>{{ a.expense_reason }} - amounts to {{ a.cost }} {{ a.currency_expanse }} from {{ a.date_expanse|date:"d.m.Y" }}</h6>
+    {% endfor %}
+{% endblock %}

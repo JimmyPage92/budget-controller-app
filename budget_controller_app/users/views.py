@@ -3,6 +3,10 @@ from .forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
+
+def home(request):
+    return render(request, 'users/main-page.html')
+
 def register(request):
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
@@ -26,7 +30,7 @@ def profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, "Your profile's been updated!")
-            return redirect('profile')
+            return redirect('user-page')
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)

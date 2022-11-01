@@ -1,13 +1,16 @@
+import datetime
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.urls import reverse
+
 # Create your models here.
 CHOICES_INCOME = (
-    ('Blank', 'Blank'),
-    ('Social', 'Social'),
     ('Salary', 'Salary'),
-    ('Donation', 'Donation')
+    ('Social', 'Social'),
+    ('Donation', 'Donation'),
+    ('Other', 'Other'),
 )
 
 CHOICES_CURRENCY = (
@@ -26,22 +29,30 @@ CHOICES_EXPENSES = (
 )
 
 
+
 class Income(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_income = models.DateField(null=True)
-    reason_income = models.CharField(choices=CHOICES_INCOME, default='', max_length=15)
-    currency = models.CharField(choices=CHOICES_CURRENCY,default='',max_length=5)
-    income = models.DecimalField(max_digits=12, decimal_places=2, default=0.0)
+    date_income = models.DateField(default=timezone.now, verbose_name='Date income ("YYYY-MM-DD")')
+    reason_income = models.CharField(choices=CHOICES_INCOME, blank=True, max_length=15)
+    currency = models.CharField(choices=CHOICES_CURRENCY, default='', max_length=5)
+    income = models.FloatField(default=0.0, verbose_name='Amount income')
+
+    def get_absolute_url(self):
+        return reverse('user-page')
 
     def __str__(self):
-        return f'Hello {self.author} You have now: {self.income} {self.currency} from {self.reason_income}'
+        return f'Hello {self.author} Your income : {self.income} {self.currency} from {self.reason_income}'
 
 class ExpensesInfo(models.Model):
-    expense_name = models.CharField(choices=CHOICES_EXPENSES, default='', max_length=50)
-    cost = models.FloatField()
-    date_added = models.DateField()
-    user_expense = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_expanse = models.ForeignKey(User, on_delete=models.CASCADE)
+    expense_reason = models.CharField(choices=CHOICES_EXPENSES, blank=True, max_length=50)
+    cost = models.FloatField(default=0.0, verbose_name='Amoint of expanse')
+    date_expanse = models.DateField(default=timezone.now, verbose_name='Date expanse ("YYYY-MM-DD")')
+    currency_expanse = models.CharField(choices=CHOICES_CURRENCY, default='', max_length=5)
+
+    def get_absolute_url(self):
+        return reverse('user-page')
 
     def __str__(self):
-        return f'Your expense: {self.expense_name} from {self.date_added} amounts to {self.cost}'
+        return f'Your expense: {self.expense_reason} is from {self.date_added} and amounts to {self.cost}'
 

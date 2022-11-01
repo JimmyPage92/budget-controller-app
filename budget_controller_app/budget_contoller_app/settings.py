@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'budget',
     'users',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -132,5 +133,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-LOGIN_REDIRECT_URL = 'home-page'
+LOGIN_REDIRECT_URL = 'user-page'
 LOGIN_URL = 'login'
+DATE_FORMAT = '%d-%m-%y'
