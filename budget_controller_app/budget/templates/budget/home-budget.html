@@ -1,5 +1,6 @@
 {% extends 'budget/base.html' %}
 {% block content %}
+<body>
 <div class="content-section">
     <div class="media">
         <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
@@ -8,14 +9,32 @@
         </div>
     </div>
     <h3> It's Your history budget</h3>
+</div>
 <hr style="height: 3px; background: blue; border: 0px;">
 <h2>Twoje przychody:</h2>
 {% for x in incomes %}
-<h6>{{ x.reason_income }} - amounts to {{ x.income }} {{ x.currency}} from {{ x.date_income|date:"d.m.Y" }}</h6>
+<h6>{{ x.reason_income }} - {{ x.income }} {{ x.currency}} from {{ x.date_income|date:"d.m.Y" }}</h6>
     {% endfor %}
+<div class="row">
+    <div class="container center">
+        <h3 class='center'>Your total budget is: <span style="color:green;">{{budget}}</span></h3>
+    </div>
+</div>
 <hr style="height: 3px; background: red; border: 0px;">
 <h2>Twoje wydatki:</h2>
 {% for a in expanses %}
-<h6>{{ a.expense_reason }} - amounts to {{ a.cost }} {{ a.currency_expanse }} from {{ a.date_expanse|date:"d.m.Y" }}</h6>
+<h6>{{ a.expense_reason }} - {{ a.cost }} {{ a.currency_expanse }} from {{ a.date_expanse|date:"d.m.Y" }}</h6>
     {% endfor %}
+<div class="row">
+    <div class="container center">
+        <h3 clas='center'>You've spent a total of : <span style="color:red;">{{expenses}}</span></h3>
+    </div>
+</div>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.datepicker');
+                var instances = M.Datepicker.init(elems, {format:'yyyy-mm-dd'});
+            });
+        </script>
+</body>
 {% endblock %}

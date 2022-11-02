@@ -35,7 +35,7 @@ class Income(models.Model):
     date_income = models.DateField(default=timezone.now, verbose_name='Date income ("YYYY-MM-DD")')
     reason_income = models.CharField(choices=CHOICES_INCOME, blank=True, max_length=15)
     currency = models.CharField(choices=CHOICES_CURRENCY, default='', max_length=5)
-    income = models.FloatField(default=0.0, verbose_name='Amount income')
+    income = models.DecimalField(decimal_places=2, max_digits=10, default=0.0, verbose_name='Amount income')
 
     def get_absolute_url(self):
         return reverse('user-page')
@@ -46,7 +46,7 @@ class Income(models.Model):
 class ExpensesInfo(models.Model):
     author_expanse = models.ForeignKey(User, on_delete=models.CASCADE)
     expense_reason = models.CharField(choices=CHOICES_EXPENSES, blank=True, max_length=50)
-    cost = models.FloatField(default=0.0, verbose_name='Amoint of expanse')
+    cost = models.DecimalField(decimal_places=2, max_digits=10, default=0.0, verbose_name='Amount of expanse')
     date_expanse = models.DateField(default=timezone.now, verbose_name='Date expanse ("YYYY-MM-DD")')
     currency_expanse = models.CharField(choices=CHOICES_CURRENCY, default='', max_length=5)
 
