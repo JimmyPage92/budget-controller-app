@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 
 @login_required(login_url='login')
 def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
-    expense_items = ExpensesInfo.objects.filter(author_expanse=request.user).order_by('-date_expanse')
     try:
         budget_total = Income.objects.filter(author=request.user).aggregate(budget_total=Sum('income'))
         expense_total = ExpensesInfo.objects.filter(author_expanse=request.user).aggregate(expenses=Sum('cost'))
@@ -19,12 +18,12 @@ def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
         ax.bar(['Expenses', 'Budget'], [abs(expense_total['expenses']), budget_total['budget_total']],
                color=['red', 'green'])
         ax.set_title('Your total expenses vs total budget')
-        plt.savefig('budget_controller_app/static/budget/expense.jpg')
+        plt.savefig('budget/static/budget/expense.jpg')
     except TypeError:
         print('NO DATA')
-    context = {'expense_items': expense_items, 'title': 'Budget app', 'incomes': Income.objects.all(),
-               'expanses': ExpensesInfo.objects.all(), 'budget': budget_total,
-               'expenses': expense_total}
+    context = {'title': 'Budget app', 'incomes': Income.objects.all(),
+               'expanses': ExpensesInfo.objects.all(), 'budget': budget_total['budget_total'],
+               'expenses': abs(expense_total['expenses'])}
     return render(request, 'budget/home-budget.html', context=context)
 
 def about(request):
