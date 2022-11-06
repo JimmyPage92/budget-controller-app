@@ -6,36 +6,45 @@
     <div class="media">
         <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
         <div class="media-body">
-            <h2 class="account-heading">Hi, {{ user.username }}</h2>
+            <h2 class="account-heading">    Hi, {{ user.username }}</h2>
         </div>
     </div>
-    <h3> It's Your history budget</h3>
+    <h2><u style="text-decoration: underline; color: #4682B4;"><span style="color: #4682B4; font-style: Times New Roman;">It's Your history budget</u></span></h2>
 </div>
 <hr style="height: 3px; background: blue; border: 0px;">
-<h2>Twoje przychody:</h2>
+<h2>Your incomes:</h2>
 {% for x in incomes %}
-<h6>{{ x.reason_income }} - {{ x.income }} {{ x.currency}} from {{ x.date_income|date:"d.m.Y" }}</h6>
-    {% endfor %}
-<div class="row">
-    <div class="container center">
-        <h3 class='center'>Your total budget is: <span style="color:green;">{{budget}}</span></h3>
-    </div>
-</div>
-<hr style="height: 3px; background: red; border: 0px;">
-<h2>Twoje wydatki:</h2>
-{% for a in expanses %}
-<h6>{{ a.expense_reason }} - {{ a.cost }} {{ a.currency_expanse }} from {{ a.date_expanse|date:"d.m.Y" }}</h6>
+<h6><a class="article-title" style="color: blue" href="{% url 'income-detail' x.id %}">{{ x.reason_income }}:</a>
+<h6>{{ x.income }} PLN from {{ x.date_income|date:"d.m.Y" }}</h6>
 {% endfor %}
 <div class="row">
     <div class="container center">
-        <h3 clas='center'>You've spent a total of : <span style="color:red;">{{expenses}}</span></h3>
+        {% if budget_total|floatformat:2 == 0 %}
+            <h3 class='center'>Your total budget is: <span style="color:blue;">0 PLN</span></h3>
+        {% else %}
+            <h3 class='center'>Your total budget is: <span style="color:blue;">{{ budget_total|floatformat:2 }} PLN</span></h3>
+        {% endif %}
     </div>
 </div>
-        <script type="text/javascript">
-            document.addEventListener('DOMContentLoaded', function() {
-                var elems = document.querySelectorAll('.datepicker');
-                var instances = M.Datepicker.init(elems, {format:'yyyy-mm-dd'});
-            });
-        </script>
-
+<hr style="height: 3px; background: red; border: 0px;">
+<h2>Your expanses:</h2>
+{% for a in expanses %}
+    <h6><a class="article-title" style="color: red" href="{% url 'expanse-detail' a.id %}">{{ a.expense_reason }}:</a></h6>
+<h6>{{ a.cost }} PLN from {{ a.date_expanse|date:"d.m.Y" }}</h6>
+{% endfor %}
+<div class="row">
+    <div class="container center">
+        {% if expenses_total|floatformat:2 == 0 %}
+            <h3 class='center'>You've spent a total of : <span style="color:red;">0 PLN</span></h3>
+        {% else %}
+            <h3 class='center'>You've spent a total of : <span style="color:red;">{{ expenses_total|floatformat:2 }} PLN</span></h3>
+        {% endif %}
+    </div>
+</div>
+<hr style="height: 5px; background: grey; border: 0px;">
+{% if expenses_total  >  budget_total %}
+    <h4><b><u><span style="color: red; font-style: italic;">Wydales wiecej niz masz pieniedzy na koncie !!!</span></u></b></h4>
+{% endif %}
+<img src="my_img.png" title="My plot" />
 {% endblock %}
+</body>

@@ -1,29 +1,31 @@
+import matplotlib
 from django.shortcuts import render
 from .models import Income, ExpensesInfo
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.urls import reverse_lazy
 import matplotlib.pyplot as plt
-import numpy as np
-from django.db.models import Q
-from django.contrib.auth.models import User
 
 @login_required(login_url='login')
 def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
     try:
+
         budget_total = Income.objects.filter(author=request.user).aggregate(budget_total=Sum('income'))
         expense_total = ExpensesInfo.objects.filter(author_expanse=request.user).aggregate(expenses=Sum('cost'))
         fig, ax = plt.subplots()
-        ax.bar(['Expenses', 'Budget'], [abs(expense_total['expenses']), budget_total['budget_total']],
-               color=['red', 'green'])
+        ax.bar(['Expenses', 'Budget'], [abs(expense_total['expenses']), budget_total['budget_total']], color=['red','green'])
+
         ax.set_title('Your total expenses vs total budget')
-        plt.savefig('budget/static/budget/expense.jpg')
+        plt.show()
+        plt.savefig('./my_img.png')
+
     except TypeError:
         print('NO DATA')
-    context = {'title': 'Budget app', 'incomes': Income.objects.all(),
-               'expanses': ExpensesInfo.objects.all(), 'budget': budget_total['budget_total'],
-               'expenses': abs(expense_total['expenses'])}
+    context = {'title': 'User page', 'incomes': Income.objects.all(),
+               'expanses': ExpensesInfo.objects.all(), 'budget_total': budget_total['budget_total'],
+               'expenses_total': expense_total['expenses']}
     return render(request, 'budget/home-budget.html', context=context)
 
 def about(request):
@@ -32,7 +34,7 @@ def about(request):
 class IncomeCreateView(LoginRequiredMixin, CreateView):
     model = Income
     template_name = 'budget/income_form.html'
-    fields = ['date_income', 'reason_income', 'currency', 'income']
+    fields = ['date_income', 'reason_income', 'income']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -41,11 +43,20 @@ class IncomeCreateView(LoginRequiredMixin, CreateView):
 class ExpanseCreateView(LoginRequiredMixin, CreateView):
     model = ExpensesInfo
     template_name = 'budget/expanse_form.html'
-    fields = ['date_expanse', 'expense_reason', 'currency_expanse', 'cost']
+    fields = ['date_expanse', 'expense_reason', 'cost']
 
     def form_valid(self, form):
         form.instance.author_expanse = self.request.user
         return super().form_valid(form)
+
+class IncomeDetailView(DetailView):
+    model = Income
+    template_name = 'budget/income-detail.html'
+
+
+class ExpanseDetailView(DetailView):
+    model = ExpensesInfo
+    template_name = 'budget/expanse-detail.html'
 
 class UpdateIncomeView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Income
@@ -63,7 +74,7 @@ class UpdateIncomeView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class UpdateExpanseView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ExpensesInfo
     template_name = 'budget/expanse_form.html'
-    fields = ['date_expanse', 'reason_income', 'currency', 'income']
+    fields = ['date_expanse', 'expense_reason', 'cost']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -76,7 +87,7 @@ class UpdateExpanseView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class IncomeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Income
     template_name = 'budget/delete_income.html'
-    success_url = '/'
+    success_url = reverse_lazy('user-page')
 
     def test_func(self):
         income = self.get_object()
@@ -85,7 +96,7 @@ class IncomeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class ExpanseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = ExpensesInfo
     template_name = 'budget/delete_expanse.html'
-    success_url = '/'
+    success_url = reverse_lazy('user-page')
 
     def test_func(self):
         expanse = self.get_object()

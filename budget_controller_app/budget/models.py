@@ -13,46 +13,36 @@ CHOICES_INCOME = (
     ('Other', 'Other'),
 )
 
-CHOICES_CURRENCY = (
-    ('PLN', 'PLN'),
-    ('€', 'EURO'),
-    ('£', 'GBP'),
-    ('$', 'USD'),
-)
-
 CHOICES_EXPENSES = (
     ('Rent', 'Rent'),
     ('Food', 'Food'),
     ('Fuel', 'Fuel'),
     ('Entertainment', 'Entertainment'),
     ('Other', 'Other'),
+    ('Cosmetics and Chemicals', 'Cosmetics and Chemicals'),
 )
-
-
 
 class Income(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_income = models.DateField(default=timezone.now, verbose_name='Date income ("YYYY-MM-DD")')
     reason_income = models.CharField(choices=CHOICES_INCOME, blank=True, max_length=15)
-    currency = models.CharField(choices=CHOICES_CURRENCY, default='', max_length=5)
-    income = models.DecimalField(decimal_places=2, max_digits=10, default=0.0, verbose_name='Amount income')
+    income = models.DecimalField(max_digits=7, decimal_places=2, default=0.0, verbose_name='Amount income', blank=False)
 
     def get_absolute_url(self):
         return reverse('user-page')
 
     def __str__(self):
-        return f'Hello {self.author} Your income : {self.income} {self.currency} from {self.reason_income}'
+        return f'Hello {self.author} Your income : {self.income} PLN from {self.reason_income}'
 
 class ExpensesInfo(models.Model):
     author_expanse = models.ForeignKey(User, on_delete=models.CASCADE)
     expense_reason = models.CharField(choices=CHOICES_EXPENSES, blank=True, max_length=50)
-    cost = models.DecimalField(decimal_places=2, max_digits=10, default=0.0, verbose_name='Amount of expanse')
+    cost = models.DecimalField(max_digits=7, decimal_places=2, default=0.0, verbose_name='Amount of expanse')
     date_expanse = models.DateField(default=timezone.now, verbose_name='Date expanse ("YYYY-MM-DD")')
-    currency_expanse = models.CharField(choices=CHOICES_CURRENCY, default='', max_length=5)
 
     def get_absolute_url(self):
         return reverse('user-page')
 
     def __str__(self):
-        return f'Your expense: {self.expense_reason} is from {self.date_added} and amounts to {self.cost}'
+        return f'Your expense: {self.expense_reason} is from {self.date_expanse} and amounts to {self.cost}'
 

@@ -1,0 +1,18 @@
+{% extends 'budget/base.html' %}
+{% block content %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ user.profile.image.url }}" />
+    <div class="media-body">
+        <div class="article-metadata">
+            <small class="text-muted">Income from</small>
+            <small class="text-muted">{{ object.date_income|date:"d.m.Y" }}</small>
+        {% if object.author == user %}
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'income-update' object.id %}">Update</a>
+            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'income-delete' object.id %}">Delete</a>
+        {% endif %}
+        </div>
+        <h2>Kind of income: {{ object.reason_income }}</h2>
+        <p class="article-content">Cost: {{ object.income }} PLN</p>
+    </div>
+</article>
+{% endblock %}
