@@ -1,50 +1,48 @@
 {% extends 'budget/base.html' %}
 {% block content %}
 {% load static %}
-<body>
-<div class="content-section">
-    <div class="media">
-        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
-        <div class="media-body">
-            <h2 class="account-heading">    Hi, {{ user.username }}</h2>
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+            <div class="media-body">
+                <h2 class="account-heading">    Hi, {{ user.username }}</h2>
+            </div>
         </div>
+        <h2><u style="text-decoration: underline; color: #4682B4;"><span style="color: #4682B4; font-style: Times New Roman;">It's Your history budget</span></u></h2>
     </div>
-    <h2><u style="text-decoration: underline; color: #4682B4;"><span style="color: #4682B4; font-style: Times New Roman;">It's Your history budget</u></span></h2>
-</div>
-<hr style="height: 3px; background: blue; border: 0px;">
-<h2>Your incomes:</h2>
-{% for x in incomes %}
-<h6><a class="article-title" style="color: blue" href="{% url 'income-detail' x.id %}">{{ x.reason_income }}:</a>
-<h6>{{ x.income }} PLN from {{ x.date_income|date:"d.m.Y" }}</h6>
-{% endfor %}
-<div class="row">
-    <div class="container center">
-        {% if budget_total|floatformat:2 == 0 %}
-            <h3 class='center'>Your total budget is: <span style="color:blue;">0 PLN</span></h3>
-        {% else %}
-            <h3 class='center'>Your total budget is: <span style="color:blue;">{{ budget_total|floatformat:2 }} PLN</span></h3>
+    <hr style="height: 3px; background: blue; border: 0px;">
+    <h2>Your incomes:</h2>
+    {% for x in incomes %}
+    <h6><a class="article-title" style="color: blue" href="{% url 'income-detail' x.id %}">{{ x.reason_income }}:</a></h6>
+        <h6>{{ x.income }} PLN from {{ x.date_income|date:"d.m.Y" }}</h6>
+    {% endfor %}
+        <div class="row">
+            <div class="container center">
+                {% if budget_total|floatformat:2 == 0 %}
+                <h3 class='center'>Your total budget is: <span style="color:blue;">0 PLN</span></h3>
+                {% else %}
+                <h3 class='center'>Your total budget is: <span style="color:blue;">{{ budget_total|floatformat:2 }} PLN</span></h3>
+                {% endif %}
+            </div>
+        </div>
+        <hr style="height: 3px; background: red; border: 0px;">
+        <h2>Your expanses:</h2>
+        {% for a in expanses %}
+        <h6><a class="article-title" style="color: red" href="{% url 'expanse-detail' a.id %}">{{ a.expense_reason }}:</a></h6>
+        <h6>{{ a.cost }} PLN from {{ a.date_expanse|date:"d.m.Y" }}</h6>
+        {% endfor %}
+        <div class="row">
+            <div class="container center">
+                {% if expanse_total|floatformat:2 == False %}
+                <h3 class='center'>You've spent a total of : <span style="color:red;">0 PLN</span></h3>
+                {% else %}
+                <h3 class='center'>You've spent a total of : <span style="color:red;">{{ expanse_total|floatformat:2 }} PLN</span></h3>
+                {% endif %}
+            </div>
+        </div>
+        <hr style="height: 5px; background: grey; border: 0px;">
+        {% if expanse_total  >  budget_total %}
+        <h4><b><u><span style="color: red; font-style: italic;">You've spent more than You have money !!!</span></u></b></h4>
         {% endif %}
-    </div>
-</div>
-<hr style="height: 3px; background: red; border: 0px;">
-<h2>Your expanses:</h2>
-{% for a in expanses %}
-    <h6><a class="article-title" style="color: red" href="{% url 'expanse-detail' a.id %}">{{ a.expense_reason }}:</a></h6>
-<h6>{{ a.cost }} PLN from {{ a.date_expanse|date:"d.m.Y" }}</h6>
-{% endfor %}
-<div class="row">
-    <div class="container center">
-        {% if expenses_total|floatformat:2 == 0 %}
-            <h3 class='center'>You've spent a total of : <span style="color:red;">0 PLN</span></h3>
-        {% else %}
-            <h3 class='center'>You've spent a total of : <span style="color:red;">{{ expenses_total|floatformat:2 }} PLN</span></h3>
-        {% endif %}
-    </div>
-</div>
-<hr style="height: 5px; background: grey; border: 0px;">
-{% if expenses_total  >  budget_total %}
-    <h4><b><u><span style="color: red; font-style: italic;">Wydales wiecej niz masz pieniedzy na koncie !!!</span></u></b></h4>
-{% endif %}
-<img src="my_img.png" title="My plot" />
+<img src="media/test.png;base64, {{plt|safe}}"/>
 {% endblock %}
-</body>

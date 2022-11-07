@@ -8,24 +8,26 @@ from django.db.models import Sum
 from django.urls import reverse_lazy
 import matplotlib.pyplot as plt
 
+
 @login_required(login_url='login')
 def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
     try:
-
         budget_total = Income.objects.filter(author=request.user).aggregate(budget_total=Sum('income'))
-        expense_total = ExpensesInfo.objects.filter(author_expanse=request.user).aggregate(expenses=Sum('cost'))
+        expanse_total = ExpensesInfo.objects.filter(author_expanse=request.user).aggregate(expanses=Sum('cost'))
         fig, ax = plt.subplots()
-        ax.bar(['Expenses', 'Budget'], [abs(expense_total['expenses']), budget_total['budget_total']], color=['red','green'])
-
+        ax.bar(['Expanses', 'Budget'], [abs(expanse_total['expanses']), budget_total['budget_total']], color=['red',
+                                                                                                              'green'])
+        plt.xlabel('Your incomes and expanses')
+        plt.ylabel('PLN')
         ax.set_title('Your total expenses vs total budget')
+        plt.legend(['Expanses'], ['Incomes'], loc='best', ncol=2, borderpad=1)
+        plt.savefig('test.png')
         plt.show()
-        plt.savefig('./my_img.png')
-
     except TypeError:
         print('NO DATA')
     context = {'title': 'User page', 'incomes': Income.objects.all(),
                'expanses': ExpensesInfo.objects.all(), 'budget_total': budget_total['budget_total'],
-               'expenses_total': expense_total['expenses']}
+               'expanse_total': expanse_total['expanses'], 'figure': plt}
     return render(request, 'budget/home-budget.html', context=context)
 
 def about(request):
