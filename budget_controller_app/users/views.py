@@ -18,7 +18,7 @@ def register(request):
     else:
         form = UserRegisterForm()
 
-    return render(request, 'users/register.html', {'form': form})
+    return render(request, 'users/register.html', {'form': form, 'title': 'register User'})
 
 @login_required
 def profile(request):
@@ -35,4 +35,4 @@ def profile(request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
 
-    return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form, 'title': 'update profile'})

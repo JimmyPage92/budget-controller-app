@@ -44,5 +44,5 @@ class ExpensesInfo(models.Model):
         return reverse('user-page')
 
     def __str__(self):
-        return f'Your expense: {self.expense_reason} is from {self.date_expanse} and amounts to {self.cost}'
+        return f'Your expense: {self.expense_reason} PLN is from {self.date_expanse} and amounts to {self.cost}'
 

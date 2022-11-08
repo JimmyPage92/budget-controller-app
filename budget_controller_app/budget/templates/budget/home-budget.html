@@ -18,7 +18,7 @@
     {% endfor %}
         <div class="row">
             <div class="container center">
-                {% if budget_total|floatformat:2 == 0 %}
+                {% if budget_total <= 0 %}
                 <h3 class='center'>Your total budget is: <span style="color:blue;">0 PLN</span></h3>
                 {% else %}
                 <h3 class='center'>Your total budget is: <span style="color:blue;">{{ budget_total|floatformat:2 }} PLN</span></h3>
@@ -33,7 +33,7 @@
         {% endfor %}
         <div class="row">
             <div class="container center">
-                {% if expanse_total|floatformat:2 == False %}
+                {% if expanse_total <= 0 %}
                 <h3 class='center'>You've spent a total of : <span style="color:red;">0 PLN</span></h3>
                 {% else %}
                 <h3 class='center'>You've spent a total of : <span style="color:red;">{{ expanse_total|floatformat:2 }} PLN</span></h3>
@@ -44,5 +44,4 @@
         {% if expanse_total  >  budget_total %}
         <h4><b><u><span style="color: red; font-style: italic;">You've spent more than You have money !!!</span></u></b></h4>
         {% endif %}
-<img src="media/test.png;base64, {{plt|safe}}"/>
 {% endblock %}
