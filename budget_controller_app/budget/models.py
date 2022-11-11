@@ -45,9 +45,3 @@ class ExpensesInfo(models.Model):
     def __str__(self):
         return f'Your expense: {self.expense_reason} PLN is from {self.date_expanse} and amounts to {self.cost}'
 
-class PlanYourExpenses(models.Model):
-    cost_expanse = models.DecimalField(max_digits=7, decimal_places=2, default=0.0, verbose_name='how much money you want to spend on...')
-    expense_reason = models.CharField(choices=CHOICES_EXPENSES, blank=True, max_length=50)
-
-    def get_absolute_url(self):
-        return reverse('user-page')
