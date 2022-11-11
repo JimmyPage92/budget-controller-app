@@ -20,8 +20,9 @@ def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
         ax.set_title('Your total expenses vs total budget')
         plt.legend(title='Expanses and Incomes')
         plt.savefig('test.png')
-        plt.show()
+
         plt.switch_backend('agg')
+        plt.show()
     except TypeError:
         print('NO DATA')
     context = {'title': 'User page', 'incomes': Income.objects.all(),
@@ -102,3 +103,6 @@ class ExpanseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         expanse = self.get_object()
         return self.request.user == expanse.author_expanse
+
+class PlanningYourBudget(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = ExpensesInfo
