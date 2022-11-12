@@ -17,7 +17,7 @@ ul {
 }
 
 .site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+  color: #C0C0C0;
 }
 
 .site-header .navbar-nav .nav-link:hover {
@@ -36,37 +36,37 @@ ul {
   margin-bottom: 20px;
 }
 
-.article-title {
+.budget-title {
   color: #444444;
 }
 
-a.article-title:hover {
+a.budget-title:hover {
   color: #428bca;
   text-decoration: none;
 }
 
-.article-content {
+.budget-content {
   white-space: pre-line;
 }
 
-.article-img {
+.budget-img {
   height: 65px;
   width: 65px;
   margin-right: 16px;
 }
 
-.article-metadata {
+.budget-metadata {
   padding-bottom: 1px;
   margin-bottom: 4px;
   border-bottom: 1px solid #e3e3e3
 }
 
-.article-metadata a:hover {
+.budget-metadata a:hover {
   color: #333;
   text-decoration: none;
 }
 
-.article-svg {
+.budget-svg {
   width: 25px;
   height: 25px;
   vertical-align: middle;

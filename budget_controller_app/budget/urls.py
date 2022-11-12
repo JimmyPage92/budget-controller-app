@@ -2,8 +2,7 @@ from . import views
 from django.urls import path
 from . import views
 from .views import IncomeCreateView, ExpanseCreateView, UpdateIncomeView, UpdateExpanseView, IncomeDeleteView,\
-    ExpanseDeleteView, ExpanseDetailView, IncomeDetailView
-
+    ExpanseDeleteView, ExpanseDetailView, IncomeDetailView, plan_expanses
 urlpatterns = [
     path('user_page/', views.home_user_page, name='user-page'),#strona zalogowanego uzytkownika
     path('about_app/', views.about, name='about-page'),
@@ -15,4 +14,5 @@ urlpatterns = [
     path('expanse/update/<int:pk>', UpdateExpanseView.as_view(), name='expanse-update'),
     path('income/delete/<int:pk>', IncomeDeleteView.as_view(), name='income-delete'),
     path('expanse/delete/<int:pk>', ExpanseDeleteView.as_view(), name='expanse-delete'),
+    path('expanse/plan/', views.plan_expanses, name='plan-expanse'),
 ]

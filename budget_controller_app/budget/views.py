@@ -1,34 +1,50 @@
-import matplotlib
 from django.shortcuts import render
 from .models import Income, ExpensesInfo
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, Count, F
 from django.urls import reverse_lazy
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 @login_required(login_url='login')
 def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
     try:
         budget_total = Income.objects.filter(author=request.user).aggregate(budget_total=Sum('income'))
+
         expanse_total = ExpensesInfo.objects.filter(author_expanse=request.user).aggregate(expanses=Sum('cost'))
+        if budget_total['budget_total'] == None:
+            budget_total['budget_total'] = 0
+        if expanse_total['expanses'] == None:
+            expanse_total['expanses'] = 0
+        # roznica = budget_total - expanse_total
         fig, ax = plt.subplots()
         ax.bar(['Expanses', 'Budget'], [(expanse_total['expanses']), budget_total['budget_total']], color=['red', 'green'])
         plt.xlabel('Your incomes and expanses')
         plt.ylabel('PLN')
         ax.set_title('Your total expenses vs total budget')
-        plt.legend(title='Expanses and Incomes')
+        red_patch = mpatches.Patch(color='red', label='Amount of expanses')
+        green_patch = mpatches.Patch(color='green', label='Amount of budget')
+        ax.legend(handles=[red_patch, green_patch], bbox_to_anchor=(0.5, 1.2), loc='upper center')
         plt.savefig('test.png')
-
         plt.switch_backend('agg')
         plt.show()
     except TypeError:
         print('NO DATA')
     context = {'title': 'User page', 'incomes': Income.objects.all(),
                'expanses': ExpensesInfo.objects.all(), 'budget_total': budget_total['budget_total'],
-               'expanse_total': expanse_total['expanses']}
+               'expanse_total': expanse_total['expanses'], }
     return render(request, 'budget/home-budget.html', context=context)
+
+@login_required(login_url='login')
+def plan_expanses(request):
+    sum_definite_expanse = ExpensesInfo.objects.all().aggregate(Sum('cost'))
+    sum2 = ExpensesInfo.objects.all().annotate(Count('expense_reason'))
+    # sum3 = ExpensesInfo.objects.values(expense_reason='Rent').aggregate(Count('expense_reason'))
+    print(sum_definite_expanse)
+    context = {'sum_definite_expanse': sum_definite_expanse, 'sum2': sum2, }
+    return render(request, 'budget/plan-your-expanse.html', context=context)
 
 def about(request):
     return render(request, 'budget/about.html', {'title': 'About'})
@@ -103,6 +119,3 @@ class ExpanseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         expanse = self.get_object()
         return self.request.user == expanse.author_expanse
-
-class PlanningYourBudget(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = ExpensesInfo

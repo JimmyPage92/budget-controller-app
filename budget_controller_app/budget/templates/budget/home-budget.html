@@ -1,6 +1,6 @@
 {% extends 'budget/base.html' %}
 {% block content %}
-{% load static %}
+{% load crispy_forms_tags %}
     <div class="content-section">
         <div class="media">
             <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
@@ -8,40 +8,92 @@
                 <h2 class="account-heading">    Hi, {{ user.username }}</h2>
             </div>
         </div>
-        <h2><u style="text-decoration: underline; color: #4682B4;"><span style="color: #4682B4; font-style: Times New Roman;">It's Your history budget</span></u></h2>
+        <h2><span style="color: blue; font-style: Times New Roman;"><strong>It's Your history budget</strong></span></h2>
     </div>
-    <hr style="height: 3px; background: blue; border: 0px;">
-    <h2>Your incomes:</h2>
-    {% for x in incomes %}
-    <h6><a class="article-title" style="color: blue" href="{% url 'income-detail' x.id %}">{{ x.reason_income }}:</a></h6>
-        <h6>{{ x.income }} PLN from {{ x.date_income|date:"d.m.Y" }}</h6>
-    {% endfor %}
+    <hr style="height: 10px; background: #4B0082; border: 0px;">
+        <h2><u style="color: #008000; font-style: Times New Roman;">Your incomes:</u></h2>
+    <div class="section">
+            <div class="row">
+                <div class="container">
+                    <div class="col s6">
+                        <table class="striped centered responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Income </th>
+                                    <th> Amount</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for x in incomes %}
+                                <tr>
+                                    <td><strong><a class="article-title" style="color: #000080" href="{% url 'income-detail' x.id %}">{{ x.reason_income }}: </a></strong></td>
+                                    <td>{{ x.income }}PLN</td>
+                                    <td>{{ x.date_income|date:"d.m.Y" }}</td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         <div class="row">
             <div class="container center">
                 {% if budget_total <= 0 %}
-                <h3 class='center'>Your total budget is: <span style="color:blue;">0 PLN</span></h3>
+                    <h3 class='center'>Your total budget is: <span style="color:blue;">0 PLN</span></h3>
                 {% else %}
-                <h3 class='center'>Your total budget is: <span style="color:blue;">{{ budget_total|floatformat:2 }} PLN</span></h3>
+                    <h3 class='center'>Your total budget is: <span style="color:blue;">{{ budget_total|floatformat:2 }} PLN</span></h3>
                 {% endif %}
             </div>
         </div>
-        <hr style="height: 3px; background: red; border: 0px;">
-        <h2>Your expanses:</h2>
-        {% for a in expanses %}
-        <h6><a class="article-title" style="color: red" href="{% url 'expanse-detail' a.id %}">{{ a.expense_reason }}:</a></h6>
-        <h6>{{ a.cost }} PLN from {{ a.date_expanse|date:"d.m.Y" }}</h6>
-        {% endfor %}
+        <hr style="height: 10px; background: #7FFF00; border: 0px;">
+        <h2><u style="color: #B22222; font-style: Times New Roman;">Your expanses:</u></h2>
+        <div class="section">
+            <div class="row">
+                <div class="container">
+                    <div class="col s6">
+                        <table class="striped centered responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Expanse </th>
+                                    <th> Amount</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for a in expanses %}
+                                <tr>
+                                    <td><strong><a class="article-title" style="color: #FF0000" href="{% url 'expanse-detail' a.id %}"> {{ a.expense_reason }}: </a></strong></td>
+                                    <td>    {{ a.cost }}PLN </td>
+                                    <td>    {{ a.date_expanse|date:"d.m.Y" }} </td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="container center">
                 {% if expanse_total <= 0 %}
-                <h3 class='center'>You've spent a total of : <span style="color:red;">0 PLN</span></h3>
+                    <h3 class='center'>The sum of your expenses is: <span style="color:blue;">0 PLN</span></h3>
                 {% else %}
-                <h3 class='center'>You've spent a total of : <span style="color:red;">{{ expanse_total|floatformat:2 }} PLN</span></h3>
+                    <h3 class='center'>The sum of your expenses is: <span style="color:blue;">{{ expanse_total|floatformat:2 }} PLN</span></h3>
                 {% endif %}
             </div>
         </div>
-        <hr style="height: 5px; background: grey; border: 0px;">
+        <hr style="height: 10px; background: #66CDAA; border: 0px;">
         {% if expanse_total  >  budget_total %}
-        <h4><b><u><span style="color: red; font-style: italic;">You've spent more than You have money !!!</span></u></b></h4>
+        <h2><b><u><span style="color: red; font-style: italic;">You've spent more than You have money !!!</span></u></b></h2>
         {% endif %}
+<h1>You've already spent {{ budget_total|floatformat:2 }} - {{ expanse_total|floatformat:2 }} =  PLN</h1>
+<div class="container">
+    <img class="rounded-circle account-img" src='test.png'>
+</div>
+    </div>
 {% endblock %}

@@ -34,7 +34,7 @@
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
-
+                            <a class="nav-item nav-link" href="{% url 'plan-expanse' %}">Plan Your expanses</a>
                             <a class="nav-item nav-link" href="{% url 'user-page' %}">Watch history Your budget</a>
                             <a class="nav-item nav-link" href="{% url 'profile' %}">Change Your Profile</a>
                             <a class="nav-item nav-link" href="{% url 'income-create' %}">Add Income</a>
