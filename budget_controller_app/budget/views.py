@@ -38,12 +38,14 @@ def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
     return render(request, 'budget/home-budget.html', context=context)
 
 @login_required(login_url='login')
-def plan_expanses(request):
+def plan_expanses(request):# chcialbym obliczyc sume wydatkow np. dla RENT albo dla FOOD FUel
     sum_definite_expanse = ExpensesInfo.objects.all().aggregate(Sum('cost'))
     sum2 = ExpensesInfo.objects.all().annotate(Count('expense_reason'))
-    # sum3 = ExpensesInfo.objects.values(expense_reason='Rent').aggregate(Count('expense_reason'))
-    print(sum_definite_expanse)
-    context = {'sum_definite_expanse': sum_definite_expanse, 'sum2': sum2, }
+    sum_rent = ExpensesInfo.objects.filter(expense_reason__startswith='Rent').aggregate(Sum('cost'))
+    sum_food = ExpensesInfo.objects.filter(expense_reason__startswith='Food').aggregate(Sum('cost'))
+    sum_entertainment = ExpensesInfo.objects.filter(expense_reason__startswith='Entertainment').aggregate(Sum('cost'))
+    context = {'sum_definite_expanse': sum_definite_expanse, 'sum2': sum2, 'sum_rent': sum_rent, 'sum_food': sum_food,
+               'sum_entertainment': sum_entertainment}
     return render(request, 'budget/plan-your-expanse.html', context=context)
 
 def about(request):
