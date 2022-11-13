@@ -38,7 +38,7 @@ def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
     return render(request, 'budget/home-budget.html', context=context)
 
 @login_required(login_url='login')
-def plan_expanses(request):# chcialbym obliczyc sume wydatkow np. dla RENT albo dla FOOD FUel
+def plan_expanses(request):# chcialbym obliczyc sume wydatkow np. dla RENT albo dla FOOD czy FUel
     sum_definite_expanse = ExpensesInfo.objects.all().aggregate(Sum('cost'))
     sum2 = ExpensesInfo.objects.all().annotate(Count('expense_reason'))
     sum_rent = ExpensesInfo.objects.filter(expense_reason__startswith='Rent').aggregate(Sum('cost'))
