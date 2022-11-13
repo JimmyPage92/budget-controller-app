@@ -149,7 +149,7 @@ def send_email(request):
     send_mail(
         subject="Test email!",
         message="This is a test email!",
-        from_email=[settings.EMAIL_HOST_USER],
+        from_email=settings.EMAIL_HOST_USER,
         recipient_list=[settings.EMAIL_HOST_USER],
-        fail_silently=False
+        fail_silently=False,
     )
