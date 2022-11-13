@@ -25,8 +25,8 @@ def home_user_page(request):  # strona startowa jak sie uzytkownik zaloguje
             budget_total['budget_total'] = 0
         if expanse_total['expanses'] == None:
             expanse_total['expanses'] = 0
-        # roznica = budget_total - expanse_total
-
+        print(budget_total)
+        diff = int(budget_total - expanse_total)
         fig, ax = plt.subplots()
         ax.bar(['Expanses', 'Budget'], [(expanse_total['expanses']), budget_total['budget_total']],
                color=['red', 'green'])
@@ -40,11 +40,12 @@ def home_user_page(request):  # strona startowa jak sie uzytkownik zaloguje
         plt.switch_backend('agg')
         plt.show()
         plt.close()
+
     except TypeError:
         print('NO DATA')
     context = {'title': 'User page', 'incomes': Income.objects.all(),
                'expanses': ExpensesInfo.objects.all(), 'budget_total': budget_total['budget_total'],
-               'expanse_total': expanse_total['expanses'], "chart_name": "test"}
+               'expanse_total': expanse_total['expanses'], "chart_name": "test", 'roznica': diff}
     return render(request, 'budget/home-budget.html', context=context)
 
 
