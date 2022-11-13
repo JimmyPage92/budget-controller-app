@@ -19,8 +19,8 @@
                         <table class="striped centered responsive-table">
                             <thead>
                                 <tr>
-                                    <th>Income </th>
-                                    <th> Amount</th>
+                                    <th>Income</th>
+                                    <th>Amount</th>
                                     <th>Date</th>
                                     <th></th>
                                 </tr>
@@ -28,8 +28,8 @@
                             <tbody>
                                 {% for x in incomes %}
                                 <tr>
-                                    <td><strong><a class="article-title" style="color: #000080" href="{% url 'income-detail' x.id %}">{{ x.reason_income }}: </a></strong></td>
-                                    <td>{{ x.income }}PLN</td>
+                                    <td><strong><a class="article-title" style="color: #000080" href="{% url 'income-detail' x.id %}">{{ x.reason_income }}:    </a></strong></td>
+                                    <td>{{ x.income }} PLN</td>
                                     <td>{{ x.date_income|date:"d.m.Y" }}</td>
                                     <td></td>
                                 </tr>
@@ -92,8 +92,13 @@
         <h2><b><u><span style="color: red; font-style: italic;">You've spent more than You have money !!!</span></u></b></h2>
         {% endif %}
 <h2>You've already spent {{ budget_total|floatformat:2 }} - {{ expanse_total|floatformat:2 }} =  jak wyswietlic roznice?PLN</h2>
-<div class="container">
-    <img class="rounded-circle account-img" src='test.png'>
-</div>
+<div class="content-section">
+        <div class="media">
+            <img src="{{ test.png }}">
+            <div class="media-body">
+            </div>
+        </div>
     </div>
+    </div>
+</div>
 {% endblock %}

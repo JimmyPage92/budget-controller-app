@@ -5,8 +5,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 from django.urls import reverse_lazy
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import os
 
 @login_required(login_url='login')
 def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
@@ -26,19 +29,22 @@ def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
         ax.set_title('Your total expenses vs total budget')
         red_patch = mpatches.Patch(color='red', label='Amount of expanses')
         green_patch = mpatches.Patch(color='green', label='Amount of budget')
-        ax.legend(handles=[red_patch, green_patch], bbox_to_anchor=(0.5, 1.2), loc='upper center')
-        plt.savefig('test.png')
+        ax.legend(handles=[red_patch, green_patch], loc=(0.4, 0.8))
+        plt.savefig(os.path.join('test.png'), dpi=90, format='png', bbox_inches='tight')
         plt.switch_backend('agg')
         plt.show()
+        plt.close()
     except TypeError:
         print('NO DATA')
     context = {'title': 'User page', 'incomes': Income.objects.all(),
                'expanses': ExpensesInfo.objects.all(), 'budget_total': budget_total['budget_total'],
-               'expanse_total': expanse_total['expanses'], }
+               'expanse_total': expanse_total['expanses']}
     return render(request, 'budget/home-budget.html', context=context)
 
 @login_required(login_url='login')
-def plan_expanses(request):# chcialbym obliczyc sume wydatkow np. dla RENT albo dla FOOD czy FUel
+def plan_expanses(request):# obliczam sume wydatkow np. dla RENT albo dla FOOD czy Fuel/
+    # zrobic formularz zeby dodawac ustalona kwote do wydania!!!
+
     sum_definite_expanse = ExpensesInfo.objects.all().aggregate(Sum('cost'))
     sum2 = ExpensesInfo.objects.all().annotate(Count('expense_reason'))
     sum_rent = ExpensesInfo.objects.filter(expense_reason__startswith='Rent').aggregate(Sum('cost'))
