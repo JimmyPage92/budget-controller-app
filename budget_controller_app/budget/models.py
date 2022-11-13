@@ -21,17 +21,20 @@ CHOICES_EXPENSES = (
     ('Cosmetics and Chemicals', 'Cosmetics and Chemicals'),
 )
 
+
 class Income(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_income = models.DateField(default=timezone.now, verbose_name='Date income ("YYYY-MM-DD")')
     reason_income = models.CharField(choices=CHOICES_INCOME, blank=False, max_length=15)
-    income = models.DecimalField(max_digits=7, decimal_places=2, default=0.00, verbose_name='Amount income', blank=False)
+    income = models.DecimalField(max_digits=7, decimal_places=2, default=0.00, verbose_name='Amount income',
+                                 blank=False)
 
     def get_absolute_url(self):
         return reverse('user-page')
 
     def __str__(self):
         return f'Hello {self.author} Your income : {self.income} PLN from {self.reason_income}'
+
 
 class ExpensesInfo(models.Model):
     author_expanse = models.ForeignKey(User, on_delete=models.CASCADE)

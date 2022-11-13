@@ -1,18 +1,22 @@
+from django.conf import settings
 from django.shortcuts import render
 from .models import Income, ExpensesInfo
+from django.core.mail import send_mail
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, Count, F
+from django.db.models import Sum, Count
 from django.urls import reverse_lazy
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import os
 
+
 @login_required(login_url='login')
-def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
+def home_user_page(request):  # strona startowa jak sie uzytkownik zaloguje
     try:
         budget_total = Income.objects.filter(author=request.user).aggregate(budget_total=Sum('income'))
 
@@ -22,8 +26,10 @@ def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
         if expanse_total['expanses'] == None:
             expanse_total['expanses'] = 0
         # roznica = budget_total - expanse_total
+
         fig, ax = plt.subplots()
-        ax.bar(['Expanses', 'Budget'], [(expanse_total['expanses']), budget_total['budget_total']], color=['red', 'green'])
+        ax.bar(['Expanses', 'Budget'], [(expanse_total['expanses']), budget_total['budget_total']],
+               color=['red', 'green'])
         plt.xlabel('Your incomes and expanses')
         plt.ylabel('PLN')
         ax.set_title('Your total expenses vs total budget')
@@ -38,12 +44,13 @@ def home_user_page(request):# strona startowa jak sie uzytkownik zaloguje
         print('NO DATA')
     context = {'title': 'User page', 'incomes': Income.objects.all(),
                'expanses': ExpensesInfo.objects.all(), 'budget_total': budget_total['budget_total'],
-               'expanse_total': expanse_total['expanses']}
+               'expanse_total': expanse_total['expanses'], "chart_name": "test"}
     return render(request, 'budget/home-budget.html', context=context)
 
+
 @login_required(login_url='login')
-def plan_expanses(request):# obliczam sume wydatkow np. dla RENT albo dla FOOD czy Fuel/
-    # zrobic formularz zeby dodawac ustalona kwote do wydania!!!
+def plan_expanses(request):  # tu obliczam sume wydatkow np. dla RENT albo dla FOOD czy Fuel/
+    # TODO zrobic formularz zeby dodawac ustalona kwote do wydania i porownac ja z kwota wydana juz na konkretny typ
 
     sum_definite_expanse = ExpensesInfo.objects.all().aggregate(Sum('cost'))
     sum2 = ExpensesInfo.objects.all().annotate(Count('expense_reason'))
@@ -54,8 +61,10 @@ def plan_expanses(request):# obliczam sume wydatkow np. dla RENT albo dla FOOD c
                'sum_entertainment': sum_entertainment}
     return render(request, 'budget/plan-your-expanse.html', context=context)
 
-def about(request):
+
+def about(request):  # strona about_app
     return render(request, 'budget/about.html', {'title': 'About'})
+
 
 class IncomeCreateView(LoginRequiredMixin, CreateView):
     model = Income
@@ -66,6 +75,7 @@ class IncomeCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+
 class ExpanseCreateView(LoginRequiredMixin, CreateView):
     model = ExpensesInfo
     template_name = 'budget/expanse_form.html'
@@ -75,6 +85,7 @@ class ExpanseCreateView(LoginRequiredMixin, CreateView):
         form.instance.author_expanse = self.request.user
         return super().form_valid(form)
 
+
 class IncomeDetailView(DetailView):
     model = Income
     template_name = 'budget/income-detail.html'
@@ -83,6 +94,7 @@ class IncomeDetailView(DetailView):
 class ExpanseDetailView(DetailView):
     model = ExpensesInfo
     template_name = 'budget/expanse-detail.html'
+
 
 class UpdateIncomeView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Income
@@ -97,6 +109,7 @@ class UpdateIncomeView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         income = self.get_object()
         return self.request.user == income.author
 
+
 class UpdateExpanseView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ExpensesInfo
     template_name = 'budget/expanse_form.html'
@@ -110,6 +123,7 @@ class UpdateExpanseView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         expanse = self.get_object()
         return self.request.user == expanse.author_expanse
 
+
 class IncomeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Income
     template_name = 'budget/delete_income.html'
@@ -119,6 +133,7 @@ class IncomeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         income = self.get_object()
         return self.request.user == income.author
 
+
 class ExpanseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = ExpensesInfo
     template_name = 'budget/delete_expanse.html'
@@ -127,3 +142,14 @@ class ExpanseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         expanse = self.get_object()
         return self.request.user == expanse.author_expanse
+
+
+def send_email(request):
+
+    send_mail(
+        subject="Test email!",
+        message="This is a test email!",
+        from_email=[settings.EMAIL_HOST_USER],
+        recipient_list=[settings.EMAIL_HOST_USER],
+        fail_silently=False
+    )
