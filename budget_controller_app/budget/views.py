@@ -1,14 +1,13 @@
 from django.conf import settings
 from django.shortcuts import render
 from .models import Income, ExpensesInfo
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
 from django.urls import reverse_lazy
 import matplotlib
-
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -25,8 +24,8 @@ def home_user_page(request):  # strona startowa jak sie uzytkownik zaloguje
             budget_total['budget_total'] = 0
         if expanse_total['expanses'] == None:
             expanse_total['expanses'] = 0
-        print(budget_total)
-        diff = int(budget_total - expanse_total)
+
+
         fig, ax = plt.subplots()
         ax.bar(['Expanses', 'Budget'], [(expanse_total['expanses']), budget_total['budget_total']],
                color=['red', 'green'])
@@ -40,12 +39,12 @@ def home_user_page(request):  # strona startowa jak sie uzytkownik zaloguje
         plt.switch_backend('agg')
         plt.show()
         plt.close()
-
     except TypeError:
         print('NO DATA')
+    diff = (budget_total|expanse_total)
     context = {'title': 'User page', 'incomes': Income.objects.all(),
                'expanses': ExpensesInfo.objects.all(), 'budget_total': budget_total['budget_total'],
-               'expanse_total': expanse_total['expanses'], "chart_name": "test", 'roznica': diff}
+               'expanse_total': expanse_total['expanses'], "chart_name": "test", 'diff': diff}
     return render(request, 'budget/home-budget.html', context=context)
 
 
@@ -147,10 +146,9 @@ class ExpanseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def send_email(request):
 
-    send_mail(
+    EmailMessage(
         subject="Test email!",
-        message="This is a test email!",
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[settings.EMAIL_HOST_USER],
-        fail_silently=False,
+        body="This is a test email!",
+        from_email=[settings.EMAIL_HOST_USER],
+        to=[settings.EMAIL_HOST_USER]
     )

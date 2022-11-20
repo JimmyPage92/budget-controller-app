@@ -138,4 +138,4 @@ EMAIL_HOST_PASSWORD = config("EMAIL_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_FILE_PATH= '/tmp/app-messages'
+
