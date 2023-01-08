@@ -81,9 +81,9 @@
         <div class="row">
             <div class="container center">
                 {% if expanse_total <= 0 %}
-                    <h3 class='center'>The sum of your expenses is: <span style="color:blue;">0 PLN</span></h3>
+                    <h3 class='center'>The sum of your expenses is: <span style="color:red;">0 PLN</span></h3>
                 {% else %}
-                    <h3 class='center'>The sum of your expenses is: <span style="color:blue;">{{ expanse_total|floatformat:2 }} PLN</span></h3>
+                    <h3 class='center'>The sum of your expenses is: <span style="color:red;">{{ expanse_total|floatformat:2 }} PLN</span></h3>
                 {% endif %}
             </div>
         </div>
@@ -91,9 +91,9 @@
         {% if expanse_total  >  budget_total %}
         <h2><b><u><span style="color: red; font-style: italic;">You've spent more than You have money !!!</span></u></b></h2>
         {% endif %}
-        <h2>You've already spent {{ budget_total|floatformat:2 }} - {{ expanse_total|floatformat:2 }} = {{ diff }} jak wyswietlic tu roznice? PLN</h2>
+        <h2>On your account left: {{ diff }} PLN</h2>
 
-<div class="container" style="width: 10%; float: right;">
+<div class="container" style="width: 0%; float: right;">
     <img src='/media/{{ chart_name }}.png' alt="" height="500" width="500">
 </div>
     </div>

@@ -13,5 +13,6 @@ urlpatterns = [
     path('income/delete/<int:pk>', views.IncomeDeleteView.as_view(), name='income-delete'),
     path('expanse/delete/<int:pk>', views.ExpanseDeleteView.as_view(), name='expanse-delete'),
     path('expanse/plan/', views.plan_expanses, name='plan-expanse'),
-    path('send_email/', views.send_email, name='send-test-email')
+    path('expanse/plan/sum/', views.plan_expanses, name='plan-expanse-sum'),
+    path('send_email/', views.send_email, name='send-test-email'),
 ]

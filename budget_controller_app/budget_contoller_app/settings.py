@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'budget',
     'users',
     'bootstrap_datepicker_plus',
+    'chartjs',
+
 ]
 
 MIDDLEWARE = [
@@ -133,9 +135,9 @@ LOGIN_URL = 'login'
 DATE_FORMAT = '%d-%m-%y'
 
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = config("EMAIL")
+EMAIL_HOST_USER = 'michaldjangoapp@gmail.com'
 EMAIL_HOST_PASSWORD = config("EMAIL_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 

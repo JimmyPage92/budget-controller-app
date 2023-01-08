@@ -29,6 +29,7 @@ class Income(models.Model):
     income = models.DecimalField(max_digits=7, decimal_places=2, default=0.00, verbose_name='Amount income',
                                  blank=False)
 
+
     def get_absolute_url(self):
         return reverse('user-page')
 
@@ -47,3 +48,7 @@ class ExpensesInfo(models.Model):
 
     def __str__(self):
         return f'Your expense: {self.expense_reason} PLN is from {self.date_expanse} and amounts to {self.cost}'
+
+
+# class MonthsDate(models.Model):
+#     month_income = models.ManyToOneRel.one_to_many()
